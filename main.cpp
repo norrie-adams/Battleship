@@ -32,6 +32,10 @@ public:
             cout << endl;
         }
     } // FIX 2: Added missing closing brace for display()
+
+    void updateBoard (char row, int column) {
+        grid[row-'A'][column] = 'X';
+    }
 }; // FIX 2: Added missing closing brace/semicolon for the class
 
 struct Coordinate {
@@ -59,9 +63,9 @@ public:
         return health <= 0;
     }
 
-    void attackShip(char letter, int number) {
-        cout << letter - 'A' << endl;
-        cout << number << endl;
+    void attackShip(char row, int column) {
+        cout << row - 'A' << endl;
+        cout << column << endl;
     }
 };
 
@@ -69,15 +73,21 @@ int main() {
     Board gameBoard;
     gameBoard.display();
 
-    char letter;
-    int number;
+    char row;
+    int column;
 
     cout << "Enter a coordinate pair (i.e. A5)" << endl;
-    cin >> letter >> number;  
+    cin >> row >> column;  
     
-    Ship destroyer(3);
+    gameBoard.updateBoard(row, column);
+    gameBoard.display();
+
     
-    destroyer.attackShip(letter, number);
+
+    //Ship destroyer(3);
+
+    //destroyer.attackShip(letter, number);
+    
 
     return 0;
 }
