@@ -87,30 +87,39 @@ int main() {
     myFleet.push_back(make_shared<Ship>("Submarine", 3));
     myFleet.push_back(make_shared<Ship>("Destroyer", 2));
 
-    // Now you can loop through the fleet to place them!
     for (auto& ship : myFleet) {
+    bool placed = false;
+    while (!placed) {
+        drawBoard();
         int r, c;
         char orient;
-        bool horizontal;
-
-        drawBoard();
-        cout << "Placing " << ship-> getName() << " (Size: " << ship->getSize() << ")" << endl;
-        cout << "Enter start row and col (e.g., 2 3): ";
+        cout << "\nPlacing " << ship->getName() << " (Size " << ship->getSize() << ")" << endl;
+        cout << "Enter Row and Col: ";
         cin >> r >> c;
         cout << "Horizontal or Vertical? (h/v): ";
         cin >> orient;
 
-        horizontal = (orient == 'h');
+        bool horizontal = (orient == 'h');
+        int s = ship->getSize();
 
-        // Logic to "draw" the ship pointers onto the board
-        for (int i = 0; i < ship->getSize(); i++) {
-            if (horizontal) {
-                shipBoard[r][c + i] = ship;
-            } else {
-                shipBoard[r + i][c] = ship;
+        bool fits = true;
+        if (horizontal) {
+            if (r < 0 || r >= 10 || c < 0 || (c + s) > 10) fits = false;
+        } else {
+            if (r < 0 || (r + s) > 10 || c < 0 || c >= 10) fits = false;
+        }
+
+        if (!fits) {
+            cout << "ERROR: Ship goes off the board. Try again." << endl;
+        } else {
+            for (int i = 0; i < s; i++) {
+                if (horizontal) shipBoard[r][c + i] = ship;
+                else shipBoard[r + i][c] = ship;
             }
+            placed = true; // Exit the while loop
         }
     }
+}
 
     int rowInput, colInput;
     cout << "\nEnter target (Row Col): ";
