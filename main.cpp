@@ -1,4 +1,5 @@
 #include <iostream>
+#include <vector>
 #include <memory>
 #include <string>
 
@@ -19,6 +20,7 @@ public:
     
     void takeHit() { hits++; }
     int getSize() { return size; }
+    string getName() { return name; }
 };
 
 // GLOBAL BOARDS
@@ -77,13 +79,38 @@ void updateBoard(int r, int c) {
 int main() {
     initializeBoards();
 
-    // Let's manually place a Destroyer for testing
-    auto destroyer = make_shared<Ship>("Destroyer", 3);
-    for(int i = 0; i < 3; i++) {
-        shipBoard[2][2 + i] = destroyer; // Places at 2,2 2,3 2,4
-    }
+    vector<shared_ptr<Ship>> myFleet;
 
-    drawBoard();
+    myFleet.push_back(make_shared<Ship>("Carrier", 5));
+    myFleet.push_back(make_shared<Ship>("Battleship", 4));
+    myFleet.push_back(make_shared<Ship>("Cruiser", 3));
+    myFleet.push_back(make_shared<Ship>("Submarine", 3));
+    myFleet.push_back(make_shared<Ship>("Destroyer", 2));
+
+    // Now you can loop through the fleet to place them!
+    for (auto& ship : myFleet) {
+        int r, c;
+        char orient;
+        bool horizontal;
+
+        drawBoard();
+        cout << "Placing " << ship-> getName() << " (Size: " << ship->getSize() << ")" << endl;
+        cout << "Enter start row and col (e.g., 2 3): ";
+        cin >> r >> c;
+        cout << "Horizontal or Vertical? (h/v): ";
+        cin >> orient;
+
+        horizontal = (orient == 'h');
+
+        // Logic to "draw" the ship pointers onto the board
+        for (int i = 0; i < ship->getSize(); i++) {
+            if (horizontal) {
+                shipBoard[r][c + i] = ship;
+            } else {
+                shipBoard[r + i][c] = ship;
+            }
+        }
+    }
 
     int rowInput, colInput;
     cout << "\nEnter target (Row Col): ";
